@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Literal
 
 app=FastAPI(title="Orbixa API",version="0.5.0")
-app.add_middleware(CORSMiddleware,allow_origins=["http://localhost:8080"],allow_methods=["GET","POST"],allow_headers=["Content-Type"])
+app.add_middleware(CORSMiddleware,allow_origins=["http://localhost:8080","https://orbixa-science-preview.onrender.com"],allow_methods=["GET","POST"],allow_headers=["Content-Type"])
 pool=concurrent.futures.ThreadPoolExecutor(max_workers=1)
 jobs={}
 ELEMENTS={"H":1,"He":2,"Li":3,"Be":4,"B":5,"C":6,"N":7,"O":8,"F":9,"Ne":10,"Na":11,"Mg":12,"Al":13,"Si":14,"P":15,"S":16,"Cl":17,"Ar":18,"K":19,"Ca":20}
