@@ -31,9 +31,14 @@ def validate_xyz(req):
         except ValueError: raise ValueError("Coordinates must be numeric")
         if not all(math.isfinite(v) and abs(v)<10000 for v in coords): raise ValueError("Coordinates must be finite")
         atoms.append((fields[0],coords))
+    for i,(_,a) in enumerate(atoms):
+        for _,b in atoms[:i]:
+            if sum((x-y)**2 for x,y in zip(a,b)) < 0.04:
+                raise ValueError("Atoms are unrealistically close together")
     electrons=sum(ELEMENTS[s] for s,_ in atoms)-req.charge
     if electrons<=0 or req.spin>electrons or (electrons-req.spin)%2: raise ValueError("Invalid charge and spin combination")
     if req.method in ("RHF","RKS") and req.spin!=0: raise ValueError("Restricted methods require spin zero")
+    if req.method in ("RHF","RKS") and electrons%2: raise ValueError("Restricted methods require an even electron count")
     return atoms
 def compute(key,req):
     jobs[key]["status"]="running"
