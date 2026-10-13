@@ -75,6 +75,10 @@ def compute(key,req):
 @app.get("/health")
 def health():
     return {"status":"ok","version":"0.5.0","pyscf_available":importlib.util.find_spec("pyscf") is not None,"public_calculations_enabled":os.getenv("ORBIXA_ENABLE_JOBS")=="true"}
+@app.get("/api/limits")
+def limits():
+    return {"calculation_enabled":os.getenv("ORBIXA_ENABLE_JOBS")=="true","max_atoms_input":100,"active_worker_capacity":1,"public_preview_max_calculations":0 if os.getenv("ORBIXA_ENABLE_JOBS")!="true" else None,"message":"Public calculations require isolated, resource-limited scientific workers; preview API does not install PySCF"}
+
 @app.post("/api/validate")
 def validate(req:Calculation):
     try: atoms=validate_xyz(req)
