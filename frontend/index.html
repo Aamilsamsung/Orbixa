@@ -154,9 +154,27 @@ $("export").onclick=()=>{let b=new Blob([xyz()],{type:"chemical/x-xyz"}),url=URL
 $("exportMol").onclick=()=>{try{let b=new Blob([mol()],{type:"chemical/x-mdl-molfile"}),url=URL.createObjectURL(b),a=document.createElement("a");a.href=url;a.download="orbixa-molecule.mol";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}catch(e){$("result").textContent=e.message}};
 $("molFile").onchange=async e=>{try{let file=e.target.files[0];if(!file)return;if(file.size>100000)throw Error("MOL file too large");let state=parseMol(await file.text());snapshot();atoms=state.atoms;bonds=state.bonds;selected=-1;refresh();$("result").textContent="MOL imported with "+bonds.length+" bonds"}catch(err){$("result").textContent="MOL import failed: "+err.message}};
 $("copy").onclick=async()=>{try{await navigator.clipboard.writeText(xyz());$("result").textContent="XYZ copied"}catch(e){$("result").textContent="Copy unavailable: "+e.message}};
-$("pickBond").onclick=()=>{bondPick=[];pickMode=!pickMode;$("pickBond").classList.toggle("active",pickMode);$("pickStatus").textContent=pickMode?"Click first atom, then second atom in 3D":"Pick mode off"};$("setBond").onclick=()=>{let a=Number($("bondA").value),b=Number($("bondB").value),order=Number($("bondOrder").value);if(!atoms[a]||!atoms[b]||a===b){$("result").textContent="Choose two different atoms";return}snapshot();let old=bonds.find(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a));if(old)old.order=order;else bonds.push({a,b,order});refresh()};$("removeBond").onclick=()=>{let a=Number($("bondA").value),b=Number($("bondB").value),i=bonds.findIndex(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a));if(i<0){$("result").textContent="No bond exists between these atoms";return}snapshot();bonds.splice(i,1);refresh()};$("validate").onclick=validate;$("run").onclick=async()=>{try{let job=await api("/api/jobs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(request())});showJob(job);for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,2500));job=await api("/api/jobs/"+job.id);showJob(job);if(["completed","failed"].includes(job.status))break}}catch(e){$("result").textContent="Calculation: "+e.message}};
+$("pickBond").onclick=()=>{bondPick=[];pickMode=!pickMode;$("pickBond").classList.toggle("active",pickMode);$("pickStatus").textContent=pickMode?"Click first atom, then second atom in 3D":"Pick mode off"};$("setBond").onclick=()=>{let a=Number($("bondA").value),b=Number($("bondB").value),order=Number($("bondOrder").value);if(!atoms[a]||!atoms[b]||a===b){$("result").textContent="Choose two different atoms";return}snapshot();let old=bonds.find(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a));if(old)old.order=order;else bonds.push({a,b,order});refresh()};$("removeBond").onclick=()=>{let a=Number($("bondA").value),b=Number($("bondB").value),i=bonds.findIndex(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a));if(i<0){$("result").textContent="No bond exists between these atoms";return}snapshot();bonds.splice(i,1);refresh()};$("validate").onclick=validate;
+$("run").onclick=async()=>{
+ const button=$("run");
+ if(!$("ownerKey").value.trim()){$("status").textContent="Enter your private owner key first.";$("ownerKey").focus();return}
+ button.disabled=true;button.textContent="Submitting…";
+ try{
+  let job=await api("/api/jobs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(request())});
+  showJob(job);$("status").textContent="Job "+job.id.slice(0,8)+" queued · waiting for PC worker";button.textContent="Calculating…";
+  for(let i=0;i<100;i++){
+   await new Promise(r=>setTimeout(r,2500));
+   job=await api("/api/jobs/"+job.id);showJob(job);
+   $("status").textContent="Job "+job.id.slice(0,8)+" · "+job.status;
+   if(["completed","failed"].includes(job.status))break;
+  }
+  if(!["completed","failed"].includes(job.status))$("status").textContent="Still processing. Use Refresh jobs to check later.";
+ }catch(e){$("result").textContent="Calculation error: "+e.message;$("status").textContent="Calculation failed · "+e.message}
+ finally{button.disabled=false;button.textContent="Run calculation"}
+};
 $("refresh").onclick=async()=>{try{$("jobs").textContent=JSON.stringify(await api("/api/jobs"),null,2)}catch(e){$("jobs").textContent=e.message}};
-(async()=>{try{let h=await api("/health");$("status").textContent=h.calculation_enabled?"PC worker queue configured · enter owner key":"PC worker queue needs private keys in Render";$("run").disabled=!h.calculation_enabled}catch(e){$("status").textContent="API temporarily unavailable";$("run").disabled=true}})();
+async function checkApi(){try{let h=await api("/health");$("status").textContent=h.calculation_enabled?"API ready · enter owner key and run a calculation":"Configure private keys in Render";$("run").disabled=!h.calculation_enabled}catch(e){$("status").textContent="API unavailable · click Retry connection";$("run").disabled=true;let retry=$("retryApi");if(!retry){retry=document.createElement("button");retry.id="retryApi";retry.className="btn";retry.textContent="Retry connection";$("status").after(retry)}retry.onclick=checkApi;retry.hidden=false;return}let retry=$("retryApi");if(retry)retry.hidden=true}
+checkApi();
 
 const modules=[
 ["Molecule builder","Available","Atom coordinates, bond editing, XYZ/MOL files"],
