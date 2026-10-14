@@ -42,8 +42,16 @@ def worker_auth(key):
 def connection():
     con=sqlite3.connect(DB,timeout=10,isolation_level=None)
     con.row_factory=sqlite3.Row
-    try: yield con
-    finally: con.close()
+    try:
+        yield con
+        if con.in_transaction:
+            con.commit()
+    except BaseException:
+        if con.in_transaction:
+            con.rollback()
+        raise
+    finally:
+        con.close()
 def init_db():
     with connection() as c:
         c.execute("CREATE TABLE IF NOT EXISTS jobs (id TEXT PRIMARY KEY, status TEXT NOT NULL, request TEXT NOT NULL, result TEXT, error TEXT, created REAL NOT NULL, updated REAL NOT NULL, attempts INTEGER NOT NULL DEFAULT 0, lease_until REAL NOT NULL DEFAULT 0, lease_token TEXT)")
