@@ -3,11 +3,50 @@
 <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
 <style>
 :root{font-family:Inter,ui-sans-serif,system-ui;color:#eaf2ff;background:#080d18}*{box-sizing:border-box}body{margin:0}button,select,input,textarea{font:inherit}button{cursor:pointer}header{display:flex;align-items:center;justify-content:space-between;padding:17px 26px;border-bottom:1px solid #293850;background:#111a2b}header b{font-size:23px}header small{color:#93a8c5}.shell{display:grid;grid-template-columns:260px minmax(420px,1fr) 300px;gap:16px;padding:16px;max-width:1800px;margin:auto}.panel{background:#111b2c;border:1px solid #263a54;border-radius:15px;padding:17px;min-width:0}.panel h2{font-size:15px;margin:0 0 13px}.muted{color:#93a8c5;font-size:12px;line-height:1.5}label{display:block;font-size:12px;color:#afc0d8;margin:12px 0 5px}input,select,textarea{width:100%;border:1px solid #344d6d;background:#0a1322;color:#f2f7ff;border-radius:8px;padding:9px}textarea{height:155px;font:12px/1.45 ui-monospace,monospace}.btn{border:1px solid #3b5372;border-radius:9px;padding:9px 12px;color:#eaf2ff;background:#1b2c43;margin:4px 4px 4px 0}.primary{background:#397cf6;border-color:#397cf6}.btn:disabled{opacity:.4;cursor:not-allowed}.toolrow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.toolrow .btn{margin:0}.active{background:#214b82;border-color:#61a8ff}.viewport{position:relative;background:radial-gradient(circle at center,#192d49,#07111f 75%);border:1px solid #263a54;border-radius:12px;height:490px;overflow:hidden}#viewer{position:absolute;inset:0}.hint{position:absolute;left:12px;bottom:10px;background:#0b1524dc;color:#a9bfda;padding:7px 10px;border-radius:7px;font-size:12px;pointer-events:none}.stat{display:inline-block;background:#1a304a;border-radius:6px;padding:5px 9px;font-size:12px;margin:5px 5px 5px 0}.split{display:grid;grid-template-columns:1fr 1fr;gap:9px}pre{background:#0a1423;padding:12px;border-radius:9px;font:12px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto}hr{border:0;border-top:1px solid #263a54;margin:17px 0}#status{font-size:12px;color:#a9c8ef}.atomlist{max-height:180px;overflow:auto}.atom{display:flex;justify-content:space-between;gap:10px;padding:7px;border-bottom:1px solid #23334b;font-size:12px}.atom button{background:transparent;border:0;color:#f99}.footer{padding:12px 24px;color:#8fa2bb;font-size:12px}@media(max-width:1180px){.shell{grid-template-columns:250px 1fr}.settings{grid-column:1/-1}}@media(max-width:760px){.shell{display:block}.panel{margin:12px 0}.viewport{height:370px}header{padding:15px}.split{grid-template-columns:1fr}}
+
+:root{color-scheme:dark;font-family:Inter,"Segoe UI",ui-sans-serif,system-ui;color:#e9effa;background:#090e18;--line:#27344a;--muted:#9daec7;--surface:#121c2c;--accent:#64a2ff}
+body{background:radial-gradient(ellipse at 50% -30%,#182b46 0%,#090e18 60%);min-height:100vh}
+header{position:sticky;top:0;z-index:20;background:#0e1725ee;backdrop-filter:blur(18px);border-bottom:1px solid #2b3950;padding:14px 28px;box-shadow:0 8px 32px #0002}
+header b{letter-spacing:-.7px;font-size:24px;color:#f7faff}header small{font-size:12px}
+.shell{max-width:1920px;grid-template-columns:300px minmax(440px,1fr) 330px;gap:14px;padding:18px;align-items:start}
+.panel{background:linear-gradient(150deg,#152134,#101a29);border:1px solid #2a3b54;border-radius:16px;padding:19px;box-shadow:0 12px 35px #0003}
+.panel h2{font-size:14px;letter-spacing:.2px;color:#f4f7ff;margin-bottom:14px}
+.panel h2:not(:first-child){margin-top:18px}
+label{font-size:11px;letter-spacing:.35px;font-weight:600;color:#a8bdd8;margin-top:13px}
+input,select,textarea{background:#0b1422;border:1px solid #33455d;color:#eaf1fc;border-radius:9px;min-height:37px;outline:none;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:#6ba8ff;box-shadow:0 0 0 3px #357cdd24}
+.btn{background:#1b2b41;border:1px solid #38516e;color:#e9f2ff;font-weight:600;font-size:12px;padding:10px 13px;transition:background .15s,transform .15s}
+.btn:hover:not(:disabled){background:#29425f;transform:translateY(-1px)}
+.btn.primary{background:#397bfa;border-color:#5594ff;color:white;box-shadow:0 3px 12px #2563eb3b}
+.btn.primary:hover:not(:disabled){background:#4b8aff}
+.btn:focus-visible{outline:2px solid #90bcff;outline-offset:2px}
+.viewport{height:min(62vh,650px);min-height:430px;background:radial-gradient(ellipse at 50% 42%,#1b314d,#08111f 76%);border-color:#344660}
+.hint{border:1px solid #34445d;background:#0a1525d9}
+.stat{background:#1c3047;border:1px solid #324b69;color:#c3d8f2;font-weight:600}
+pre{background:#091321;border:1px solid #2a3b51;max-height:280px}
+hr{border-top:1px solid #2c3d54}
+.workspace-tabs{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.workspace-tabs button{background:transparent;color:#a7bad3;border:1px solid transparent;border-radius:8px;padding:9px 13px;font-size:12px;font-weight:650}
+.workspace-tabs button[aria-selected=true]{background:#253a56;color:#fff;border-color:#42638a}
+.workspace-tabs button:hover{color:white}
+.feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.feature{border:1px solid #30415b;background:#101b2b;border-radius:10px;padding:10px;min-height:70px}
+.feature b{display:block;font-size:12px;margin-bottom:5px}
+.feature span{font-size:11px;color:#9fb1ca;line-height:1.5}
+.feature.planned{opacity:.65}
+.feature .tag{display:inline-block;font-size:10px;border:1px solid #3d5069;border-radius:4px;padding:2px 5px;margin-top:6px}
+#advancedPanel{display:none}
+#advancedPanel.visible{display:block}
+#workspacePanel.hidden{display:none}
+.notice{border:1px solid #345273;background:#10233b;border-radius:10px;padding:11px;color:#b9d2ef;font-size:12px;line-height:1.6;margin:12px 0}
+#keyboardHelp{font-size:11px;color:#9fb0c9;margin-left:auto}
+@media(max-width:1280px){.shell{grid-template-columns:270px minmax(350px,1fr)}.settings{grid-column:1/-1}}
+@media(max-width:800px){.shell{display:block;padding:10px}.panel{margin-bottom:12px}.viewport{height:420px;min-height:320px}header{padding:14px}.feature-grid{grid-template-columns:1fr 1fr}}
 </style></head><body>
-<header><div><b>◈ Orbixa</b> <small> / Molecular Studio</small></div><small>Research preview · v0.6</small></header>
-<div class="shell"><aside class="panel"><h2>Molecule library <span id="libraryCount" class="stat"></span></h2><label>Search molecules</label><input id="librarySearch" placeholder="e.g. methane, butane, alcohol"><label>Load a prebuilt molecule</label><select id="preset"></select><button class="btn primary" id="load">Load molecule</button><button class="btn" id="clear">New blank</button><hr><h2>Build tools</h2><p class="muted">Choose an element, then click Add atom. Select an atom in the 3D viewer to edit its position or element.</p><label>Element</label><select id="element"><option>C</option><option>H</option><option>O</option><option>N</option><option>F</option><option>Cl</option><option>S</option><option>P</option></select><div class="toolrow"><button class="btn primary" id="add">+ Add atom</button><button class="btn" id="remove">Delete selected</button></div><label>Selected atom</label><select id="atomselect"></select><div class="split"><div><label>X (Å)</label><input id="x" type="number" step=".1"></div><div><label>Y (Å)</label><input id="y" type="number" step=".1"></div></div><label>Z (Å)</label><input id="z" type="number" step=".1"><button class="btn" id="apply">Apply atom changes</button><button class="btn" id="undo">Undo</button><hr><h2>Bond editor</h2><p class="muted">Choose two atoms and add, change, or remove their bond. Bond orders are visual editing metadata; XYZ export stores atoms only.</p><div class="split"><div><label>Atom A</label><select id="bondA"></select></div><div><label>Atom B</label><select id="bondB"></select></div></div><button class="btn" id="pickBond">Pick 2 atoms in 3D</button><span class="muted" id="pickStatus">Pick mode off</span><label>Bond order</label><select id="bondOrder"><option value="1">Single</option><option value="2">Double</option><option value="3">Triple</option></select><div class="toolrow"><button class="btn primary" id="setBond">Add / update bond</button><button class="btn" id="removeBond">Remove bond</button></div><div id="bondList" class="atomlist"></div><hr><h2>Structure</h2><div id="atomlist" class="atomlist"></div><p class="muted">This editor changes atomic coordinates. Bond visualization is inferred from distances; advanced bond-order editing and chemical valence enforcement are not yet implemented.</p></aside>
-<main class="panel"><h2>3D molecular workspace</h2><div class="toolrow"><button class="btn" id="recenter">Fit view</button><button class="btn" id="style">Toggle display</button><button class="btn" id="export">Export XYZ</button><button class="btn" id="exportMol">Export MOL</button><button class="btn" id="validate">Validate</button></div><div class="viewport"><div id="viewer"></div><div class="hint">Drag to rotate · Scroll to zoom · Click atom to select</div></div><div><span class="stat" id="count">0 atoms</span><span class="stat" id="formula">—</span><span class="stat" id="selection">No selection</span></div><h2>XYZ editor</h2><textarea id="xyz" spellcheck="false"></textarea><div class="toolrow"><button class="btn" id="import">Apply XYZ edits</button><label>Import MOL file</label><input type="file" id="molFile" accept=".mol,.sdf,chemical/x-mdl-molfile"><button class="btn" id="copy">Copy XYZ</button></div><h2>Results / validation</h2><pre id="result">Load a molecule to begin.</pre></main>
-<aside class="panel settings"><h2>Quantum calculation</h2><label>Private owner access key</label><input id="ownerKey" type="password" autocomplete="off" placeholder="Enter your private owner key"><p class="muted">Key stays in this browser tab memory only. Never publish it.</p><p class="muted">Configure a real quantum chemistry job. Public execution remains disabled until isolated scientific workers are deployed.</p><label>Method</label><select id="method"><option>RHF</option><option>UHF</option><option>RKS</option><option>UKS</option></select><label>Basis set</label><select id="basis"><option>sto-3g</option></select><label>Functional</label><select id="functional"><option>pbe</option><option>b3lyp</option></select><div class="split"><div><label>Charge</label><input type="number" id="charge" value="0"></div><div><label>Spin (2S)</label><input type="number" id="spin" value="0"></div></div><label><input type="checkbox" id="optimize" style="width:auto" disabled> Optimize geometry (coming later)</label><button class="btn primary" id="run" disabled>Run calculation</button><p id="status">Connecting to backend…</p><hr><h2>Job history</h2><button class="btn" id="refresh">Refresh jobs</button><pre id="jobs">No jobs yet.</pre></aside></div><div class="footer">Orbixa Studio · Early scientific prototype. Coordinates and visual bonds are not proof of chemically valid structures.</div>
+<header><div><b>◈ Orbixa</b> <small> / Quantum Chemistry Workbench</small></div><small>Studio · Experimental scientific preview <span class="stat">LOCAL WORKER</span></small></header>
+<div class="shell"><aside class="panel"><h2>Molecule library <span id="libraryCount" class="stat"></span></h2><label>Search molecules</label><input id="librarySearch" placeholder="e.g. methane, butane, alcohol"><label>Load a prebuilt molecule</label><select id="preset"></select><button class="btn primary" id="load">Load molecule</button><button class="btn" id="clear">New blank</button><hr><h2>Build tools</h2><p class="muted">Choose an element, then click Add atom. Select an atom in the 3D viewer to edit its position or element.</p><label>Element</label><select id="element"><option>C</option><option>H</option><option>O</option><option>N</option><option>F</option><option>Cl</option><option>S</option><option>P</option></select><div class="toolrow"><button class="btn primary" id="add">+ Add atom</button><button class="btn" id="remove">Delete selected</button></div><label>Selected atom</label><select id="atomselect"></select><div class="split"><div><label>X (Å)</label><input id="x" type="number" step=".1"></div><div><label>Y (Å)</label><input id="y" type="number" step=".1"></div></div><label>Z (Å)</label><input id="z" type="number" step=".1"><button class="btn" id="apply">Apply atom changes</button><button class="btn" id="undo">Undo</button><hr><h2>Bond editor</h2><p class="muted">Choose two atoms and add, change, or remove their bond. Bond orders are visual editing metadata; XYZ export stores atoms only.</p><div class="split"><div><label>Atom A</label><select id="bondA"></select></div><div><label>Atom B</label><select id="bondB"></select></div></div><button class="btn" id="pickBond">Pick 2 atoms in 3D</button><span class="muted" id="pickStatus">Pick mode off</span><label>Bond order</label><select id="bondOrder"><option value="1">Single</option><option value="2">Double</option><option value="3">Triple</option></select><div class="toolrow"><button class="btn primary" id="setBond">Add / update bond</button><button class="btn" id="removeBond">Remove bond</button></div><div id="bondList" class="atomlist"></div><hr><h2>Structure</h2><div id="atomlist" class="atomlist"></div><p class="muted">Edit atoms and bonds directly. Valence checks and geometry optimization are not yet available.</p></aside>
+<main class="panel"><nav class="workspace-tabs" aria-label="Workspace views"><button id="tabStudio" aria-selected="true" type="button">◈ Molecule Studio</button><button id="tabMethods" aria-selected="false" type="button">▦ Methods & Modules</button><span id="keyboardHelp">Ctrl+Z Undo · Esc Cancel selection</span></nav><div id="workspacePanel"><h2>3D molecular workspace</h2><div class="toolrow"><button class="btn" id="recenter">Fit view</button><button class="btn" id="style">Toggle display</button><button class="btn" id="export">Export XYZ</button><button class="btn" id="exportMol">Export MOL</button><button class="btn" id="validate">Validate</button></div><div class="viewport"><div id="viewer"></div><div class="hint">Drag to rotate · Scroll to zoom · Click atom to select</div></div><div><span class="stat" id="count">0 atoms</span><span class="stat" id="formula">—</span><span class="stat" id="selection">No selection</span></div><h2>XYZ editor</h2><textarea id="xyz" spellcheck="false"></textarea><div class="toolrow"><button class="btn" id="import">Apply XYZ edits</button><label>Import MOL file</label><input type="file" id="molFile" accept=".mol,.sdf,chemical/x-mdl-molfile"><button class="btn" id="copy">Copy XYZ</button></div><h2>Results / validation</h2><pre id="result">Load a molecule to begin.</pre></div><section id="advancedPanel"><h2>Scientific workflow & calculation modules</h2><div class="notice">Only capabilities marked Available are implemented in the current PC-worker prototype. Other Gaussian-style modules are a roadmap, not working calculation controls. Orbixa is an independent application, not affiliated with Gaussian, Inc.</div><div class="feature-grid" id="moduleGrid"></div><h2>Current engine constraints</h2><div class="notice">PySCF worker: RHF, UHF, RKS, UKS · STO-3G · up to 10 atoms · one job at a time · 120 seconds. Results require independent scientific validation.</div></section></main>
+<aside class="panel settings"><h2>Quantum calculation</h2><label>Private owner access key</label><input id="ownerKey" type="password" autocomplete="off" placeholder="Enter your private owner key"><p class="muted">Key stays in this browser tab memory only. Never publish it.</p><p class="muted">Configure a real quantum chemistry job. Private calculations require a configured Render queue and your local PySCF worker. The owner key is required.</p><label>Method</label><select id="method"><option>RHF</option><option>UHF</option><option>RKS</option><option>UKS</option></select><label>Basis set</label><select id="basis"><option>sto-3g</option></select><label>Functional</label><select id="functional"><option>pbe</option><option>b3lyp</option></select><div class="split"><div><label>Charge</label><input type="number" id="charge" value="0"></div><div><label>Spin (2S)</label><input type="number" id="spin" value="0"></div></div><label><input type="checkbox" id="optimize" style="width:auto" disabled> Optimize geometry (coming later)</label><button class="btn primary" id="run" disabled>Run calculation</button><p id="status">Connecting to backend…</p><hr><h2>Job history</h2><button class="btn" id="refresh">Refresh jobs</button><pre id="jobs">No jobs yet.</pre></aside></div><div class="footer">Orbixa Studio · Independent research preview · Not affiliated with Gaussian, Inc. · Validate geometries and computed results before scientific use.</div>
 <script>
 const $=id=>document.getElementById(id), API="https://orbixa-api-preview.onrender.com";
 const presets={
@@ -118,5 +157,55 @@ $("copy").onclick=async()=>{try{await navigator.clipboard.writeText(xyz());$("re
 $("pickBond").onclick=()=>{bondPick=[];pickMode=!pickMode;$("pickBond").classList.toggle("active",pickMode);$("pickStatus").textContent=pickMode?"Click first atom, then second atom in 3D":"Pick mode off"};$("setBond").onclick=()=>{let a=Number($("bondA").value),b=Number($("bondB").value),order=Number($("bondOrder").value);if(!atoms[a]||!atoms[b]||a===b){$("result").textContent="Choose two different atoms";return}snapshot();let old=bonds.find(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a));if(old)old.order=order;else bonds.push({a,b,order});refresh()};$("removeBond").onclick=()=>{let a=Number($("bondA").value),b=Number($("bondB").value),i=bonds.findIndex(x=>(x.a===a&&x.b===b)||(x.a===b&&x.b===a));if(i<0){$("result").textContent="No bond exists between these atoms";return}snapshot();bonds.splice(i,1);refresh()};$("validate").onclick=validate;$("run").onclick=async()=>{try{let job=await api("/api/jobs",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(request())});$("result").textContent=JSON.stringify(job,null,2);for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,2500));job=await api("/api/jobs/"+job.id);$("result").textContent=JSON.stringify(job,null,2);if(["completed","failed"].includes(job.status))break}}catch(e){$("result").textContent="Calculation: "+e.message}};
 $("refresh").onclick=async()=>{try{$("jobs").textContent=JSON.stringify(await api("/api/jobs"),null,2)}catch(e){$("jobs").textContent=e.message}};
 (async()=>{try{let h=await api("/health");$("status").textContent=h.calculation_enabled?"PC worker queue configured · enter owner key":"PC worker queue needs private keys in Render";$("run").disabled=!h.calculation_enabled}catch(e){$("status").textContent="API temporarily unavailable";$("run").disabled=true}})();
+
+const modules=[
+["Molecule builder","Available","Atom coordinates, bond editing, XYZ/MOL files"],
+["Structure library","Available","Searchable presets and generated starting geometries"],
+["SCF energies","Available","RHF and UHF via local PySCF worker"],
+["DFT energies","Available","RKS and UKS; PBE and B3LYP"],
+["Job monitor","Available","Queue, running and completed states"],
+["Geometry optimization","Planned","Energy minimization and optimized coordinates"],
+["Vibrational frequencies","Planned","Hessian, normal modes and IR spectra"],
+["Transition states","Planned","TS searches and reaction paths"],
+["Excited states / TD-DFT","Planned","Electronic excitations and UV-Vis spectra"],
+["Solvation models","Planned","PCM and implicit solvent workflows"],
+["Molecular orbitals","Planned","HOMO/LUMO isosurfaces and cube files"],
+["Electron density","Planned","Density and electrostatic potential maps"],
+["NMR properties","Planned","Shielding tensors and predicted shifts"],
+["Thermochemistry","Planned","Enthalpy, entropy and Gibbs energy"],
+["Post-HF methods","Planned","MP2, coupled-cluster and related methods"],
+["Basis set catalog","Planned","Extended basis families and ECP support"],
+["Charge analysis","Planned","Mulliken and other population analyses"],
+["Reaction scan","Planned","Relaxed coordinate scans and energy profiles"],
+["Conformers","Planned","Generate and compare molecular conformers"],
+["Spectroscopy","Planned","IR, Raman and UV-Vis visualization"],
+["Batch jobs","Planned","Multi-molecule jobs and reproducible workflows"],
+["Projects & reports","Planned","Persistent workspaces, export and sharing"],
+["Scientific validation","Planned","Reference benchmarks, provenance and reproducibility"],
+["Team collaboration","Planned","Accounts, permissions and audit logs"]
+];
+const moduleGrid=$("moduleGrid");
+for(const [name,status,description] of modules){
+ const tile=document.createElement("div");tile.className="feature "+(status==="Planned"?"planned":"");
+ const heading=document.createElement("b");heading.textContent=name;
+ const desc=document.createElement("span");desc.textContent=description;
+ const tag=document.createElement("span");tag.className="tag";tag.textContent=status;
+ tile.append(heading,desc,document.createElement("br"),tag);moduleGrid.append(tile);
+}
+function setWorkspace(view){
+ const studio=view==="studio";
+ $("workspacePanel").classList.toggle("hidden",!studio);
+ $("advancedPanel").classList.toggle("visible",!studio);
+ $("tabStudio").setAttribute("aria-selected",String(studio));
+ $("tabMethods").setAttribute("aria-selected",String(!studio));
+ if(studio){setTimeout(()=>{if(viewer){viewer.resize();viewer.render()}},50)}
+}
+$("tabStudio").onclick=()=>setWorkspace("studio");
+$("tabMethods").onclick=()=>setWorkspace("methods");
+document.addEventListener("keydown",e=>{
+ const editing=["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName);
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="z"&&!editing){e.preventDefault();$("undo").click()}
+ if(e.key==="Escape"&&pickMode){pickMode=false;bondPick=[];$("pickBond").classList.remove("active");$("pickStatus").textContent="Pick mode off"}
+});
 load();
 </script></body></html>
