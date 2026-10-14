@@ -10,9 +10,18 @@ cls={"RHF":scf.RHF,"UHF":scf.UHF,"RKS":dft.RKS,"UKS":dft.UKS}[data["method"]]
 mf=cls(mol)
 if data["method"].endswith("KS"): mf.xc=data["functional"]
 mf.max_cycle=60
+optimization={}
+if data.get("optimize"):
+    from pyscf.geomopt.geometric_solver import optimize
+    optimized=optimize(mf,maxsteps=20)
+    mol=optimized
+    mf=cls(mol)
+    if data["method"].endswith("KS"): mf.xc=data["functional"]
+    mf.max_cycle=60
+    optimization={"optimized_xyz":str(mol.natm)+"\\nOrbixa PySCF geometry optimization\\n"+"\\n".join(f"{mol.atom_symbol(i)} {mol.atom_coord(i,unit='Angstrom')[0]:.8f} {mol.atom_coord(i,unit='Angstrom')[1]:.8f} {mol.atom_coord(i,unit='Angstrom')[2]:.8f}" for i in range(mol.natm)),"optimization_steps_max":20}
 energy=float(mf.kernel())
 if not mf.converged or not math.isfinite(energy): raise RuntimeError("SCF did not converge")
-result={"energy_hartree":energy,"converged":True,"method":data["method"],"basis":data["basis"],"atom_count":len(atoms)}
+result={**optimization,"energy_hartree":energy,"converged":True,"method":data["method"],"basis":data["basis"],"atom_count":len(atoms)}
 if data.get("analyze",True):
     energies=mf.mo_energy
     occupations=mf.mo_occ
