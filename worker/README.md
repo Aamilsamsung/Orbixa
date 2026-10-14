@@ -19,7 +19,7 @@ git clone https://github.com/Aamilsamsung/Orbixa.git
 cd Orbixa
 python3 -m venv .venv
 source .venv/bin/activate
-pip install pyscf
+pip install pyscf geometric
 python -c "import pyscf; print(pyscf.__version__)"
 ```
 
@@ -47,7 +47,7 @@ Keep the terminal open and the PC awake. Open https://orbixa-science-preview.onr
 
 - 10 atoms, STO-3G, RHF/UHF/RKS/UKS.
 - One outstanding job, 120-second worker timeout, two BLAS threads.
-- No geometry optimization.
+- Geometry optimization is experimental and limited to 6 atoms and 20 optimization steps; some jobs may exceed the 120-second worker timeout.
 - The worker needs internet access; jobs cannot run while the PC is off.
 - Render Free has ephemeral disk: **queued jobs/results can be lost on restart or redeploy**.
 - The worker is not a full memory sandbox. On an 8 GB PC, keep molecules small and monitor memory.
