@@ -204,7 +204,7 @@ $("exportReport").onclick=()=>{
  if(!lastCompletedJob)return;
  const job=lastCompletedJob;
  const lines=["Orbixa scientific calculation report","Experimental result — verify independently","Job ID: "+job.id,"Status: "+job.status,"Method: "+job.request.method,"Basis: "+job.request.basis,"Charge: "+job.request.charge,"Spin: "+job.request.spin,"Input geometry (XYZ):",job.request.xyz,"Results:",JSON.stringify(job.result,null,2),"","This report does not certify scientific accuracy."];
- const blob=new Blob([lines.join("\\n")],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="orbixa-report-"+job.id+".txt";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
+ const blob=new Blob([lines.join("\n")],{type:"text/plain;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="orbixa-report-"+job.id+".txt";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
 };
 const moduleGrid=$("moduleGrid");
 for(const [name,status,description] of modules){
