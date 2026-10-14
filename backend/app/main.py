@@ -66,7 +66,7 @@ def validate_xyz(req):
     electrons=sum(ELEMENTS[a] for a,_ in atoms)-req.charge
     if electrons<1 or req.spin>electrons or (electrons-req.spin)%2: raise ValueError("Invalid charge/spin")
     if req.method in ("RHF","RKS") and (req.spin!=0 or electrons%2): raise ValueError("Restricted methods require closed-shell molecules")
-    if req.optimize: raise ValueError("Geometry optimization is disabled in the initial worker tier")
+    if req.optimize and n>6: raise ValueError("Geometry optimization is limited to 6 atoms")
     return atoms
 def view(row):
     d=dict(row)
@@ -79,7 +79,7 @@ def health():
     return {"status":"ok","version":"0.7.0","mode":"pc-worker-queue","calculation_enabled":bool(owner_key() and worker_key()),"pyscf_on_api":False}
 @app.get("/api/limits")
 def limits():
-    return {"max_atoms":MAX_ATOMS,"max_concurrent_per_owner":1,"methods":["RHF","UHF","RKS","UKS"],"basis":["sto-3g"],"optimization":False,"worker_timeout_seconds":120,"storage":"ephemeral SQLite; jobs can be lost on restart","configured":bool(owner_key() and worker_key())}
+    return {"max_atoms":MAX_ATOMS,"max_concurrent_per_owner":1,"methods":["RHF","UHF","RKS","UKS"],"basis":["sto-3g"],"optimization":True,"optimization_max_atoms":6,"worker_timeout_seconds":120,"storage":"ephemeral SQLite; jobs can be lost on restart","configured":bool(owner_key() and worker_key())}
 @app.post("/api/validate")
 def validate(req:Calculation):
     try: atoms=validate_xyz(req)
